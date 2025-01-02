@@ -7,12 +7,9 @@ class BooksSpider(scrapy.Spider):
     start_urls = ["https://books.toscrape.com/"]
 
     def parse(self, response):
-        title = response.css("h3 a::attr(title)").get()
-        price = response.xpath("//p[@class='price_color']").get()
+        books = response.css("article.product_pod")
         
-        print("####", title, price)
-
-        yield {
-            'title': title,
-            'price': price
-        }
+        
+        for book in books:
+            title = response.css("h3 a").attrib['title']
+            price = response.css("p.price_color::text").get()
