@@ -1,15 +1,18 @@
 import scrapy
-
+from customs.Flexibles import custom_log
 
 class BooksSpider(scrapy.Spider):
     name = "books"
-    allowed_domains = ["quotes.toscrape.com"]
-    start_urls = ["https://quotes.toscrape.com/"]
+    allowed_domains = ["books.toscrape.com"]
+    start_urls = ["https://books.toscrape.com/"]
 
     def parse(self, response):
-        custom_log(response.css("h3 a").get())
+        title = response.css("h3 a::attr(title)").get()
+        price = response.xpath("//p[@class='price_color']").get()
+        
+        print("####", title, price)
 
-
-def custom_log(value):
-    print("##############################")
-    print(f"Your value:\n{value}")
+        yield {
+            'title': title,
+            'price': price
+        }
